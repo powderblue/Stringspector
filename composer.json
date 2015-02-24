@@ -1,0 +1,27 @@
+{
+    "name": "powderblue/stringspector",
+    "type": "library",
+    "description": "Stringspector enables you to find, and manipulate, email addresses and telephone numbers in strings.  Additionally, Stringspector provides a simple framework for implementing your own inspector plugins.",
+    "keywords": ["string", "email address", "telephone number", "filter"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dan Bettles",
+            "email": "dan@powder-blue.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {"PowderBlue\\": "src/PowderBlue/"}
+    },
+    "scripts": {
+        "app:test": "cd tests && phpunit .",
+        "app:lint": "~/.composer/vendor/bin/phpcs --standard=PSR2 --extensions=php -p --ignore=/vendor/ .",
+        "app:quality-check": [
+            "composer app:test",
+            "composer app:lint"
+        ]
+    }
+}
