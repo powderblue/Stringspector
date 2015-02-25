@@ -59,6 +59,7 @@ class EmailAddresses implements PluginInterface
     /**
      * Obfuscates all email addresses in the string.
      * 
+     * @param mixed [$replacement]
      * @return void
      */
     public function obfuscate()
@@ -72,13 +73,8 @@ class EmailAddresses implements PluginInterface
             return;
         }
 
-        foreach ($emailAddressMatches[0] as $i => $emailAddress) {
-            $obfuscatedEmailAddress = (
-                $emailAddressMatches[1][$i] .
-                $emailAddressMatches[2][$i] .
-                str_repeat('*', strlen($emailAddressMatches[3][$i]))
-            );
-
+        foreach ($emailAddressMatches[0] as $emailAddress) {
+            $obfuscatedEmailAddress = func_num_args() ? func_get_arg(0) : str_repeat('*', strlen($emailAddress));
             $string = str_replace($emailAddress, $obfuscatedEmailAddress, $string);
         }
 

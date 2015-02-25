@@ -87,6 +87,7 @@ class TelephoneNumbers implements PluginInterface
     }
 
     /**
+     * @param mixed [$replacement]
      * @return void
      */
     public function obfuscate()
@@ -95,19 +96,16 @@ class TelephoneNumbers implements PluginInterface
 
         foreach (self::$countryRegExps as $regExps) {
             foreach ($regExps as $regExp) {
-                $telephoneNumberMatches = array();
-                $telephoneNumberFound = (bool) preg_match_all($regExp, $string, $telephoneNumberMatches);
+                $telNoMatches = array();
+                $telNoFound = (bool) preg_match_all($regExp, $string, $telNoMatches);
 
-                if (!$telephoneNumberFound) {
+                if (!$telNoFound) {
                     continue;
                 }
 
-                foreach ($telephoneNumberMatches[0] as $telephoneNumber) {
-                    $string = str_replace(
-                        $telephoneNumber,
-                        str_repeat('*', strlen($telephoneNumber)),
-                        $string
-                    );
+                foreach ($telNoMatches[0] as $telNo) {
+                    $obfuscatedTelNo = func_num_args() ? func_get_arg(0) : str_repeat('*', strlen($telNo));
+                    $string = str_replace($telNo, $obfuscatedTelNo, $string);
                 }
             }
         }

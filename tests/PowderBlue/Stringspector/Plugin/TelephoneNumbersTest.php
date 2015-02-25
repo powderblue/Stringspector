@@ -12,9 +12,23 @@ use PowderBlue\Stringspector\Stringspector;
 
 class Test extends \PHPUnit_Framework_TestCase
 {
+    private function createStringspector()
+    {
+        $reflectionClass = new \ReflectionClass('PowderBlue\Stringspector\Stringspector');
+        return $reflectionClass->newInstanceArgs(func_get_args());
+    }
+
+    private function createTelephoneNumbers(Stringspector $stringspector)
+    {
+        $telephoneNumbers = new TelephoneNumbers();
+        $telephoneNumbers->setStringspector($stringspector);
+        return $telephoneNumbers;
+    }
+
     public function testImplementsThePluginInterface()
     {
         $reflectionClass = new \ReflectionClass('PowderBlue\Stringspector\Plugin\TelephoneNumbers');
+
         $this->assertTrue($reflectionClass->implementsInterface('PowderBlue\Stringspector\Plugin\PluginInterface'));
     }
 
@@ -56,10 +70,7 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function testFoundReturnsTrueIfThereAppearsToBeATelephoneNumberInTheString($expected, $input)
     {
-        $stringspector = new Stringspector($input);
-
-        $telephoneNumbers = new TelephoneNumbers();
-        $telephoneNumbers->setStringspector($stringspector);
+        $telephoneNumbers = $this->createTelephoneNumbers($this->createStringspector($input));
 
         $this->assertSame($expected, $telephoneNumbers->found());
     }
@@ -92,12 +103,19 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function testObfuscateObfuscatesAllTelephoneNumbersInTheString($expected, $input)
     {
-        $stringspector = new Stringspector($input);
-
-        $telephoneNumbers = new TelephoneNumbers();
-        $telephoneNumbers->setStringspector($stringspector);
+        $stringspector = $this->createStringspector($input);
+        $telephoneNumbers = $this->createTelephoneNumbers($stringspector);
         $telephoneNumbers->obfuscate();
 
         $this->assertSame($expected, $stringspector->getString());
+    }
+
+    public function testObfuscateAcceptsAReplacementString()
+    {
+        $stringspector = $this->createStringspector('Call me on 01234 012345.');
+        $telephoneNumbers = $this->createTelephoneNumbers($stringspector);
+        $telephoneNumbers->obfuscate('<span class="redacted tel"></span>');
+
+        $this->assertSame('Call me on <span class="redacted tel"></span>.', $stringspector->getString());
     }
 }
