@@ -44,6 +44,7 @@ class Test extends \PHPUnit_Framework_TestCase
             array(true, '(016977) 0123'),  //(Brampton)
             array(true, '(015396) 01234'),  //(Sedbergh)
             array(true, '+44 (0)0000 000 000'),
+            array(true, '+44 (0) 0000 000 000'),
 
             array(true, '000 0000 0000'),
             array(true, '0000 000 0000'),
@@ -55,6 +56,9 @@ class Test extends \PHPUnit_Framework_TestCase
 
             array(true, 'You can reach me on 07000 000000 or 01000 000000.'),
             array(true, 'You can reach me on (07000) 000000 or (01000) 000000.'),
+
+            array(true, '+44 (0)203 384 1801'),
+            array(true, '+44 (0) 203 384 1801'),
         //Spain:
             //Old style:
             array(true, '93 412 46 02'),  //(Barcelona)
@@ -62,6 +66,11 @@ class Test extends \PHPUnit_Framework_TestCase
             //New style:
             array(true, '917 741 056'),  //(Madrid)
             array(true, '917.741.056'),
+        //France:
+            array(true, 'Tel : 04.50.55.35.25'),
+            array(true, '+33 (0)6 82 89 15 23'),
+            array(true, '+33 (0) 476 79 75 10'),
+            array(true, '+33(0)476797510'),
         );
     }
 
