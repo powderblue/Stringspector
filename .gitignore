@@ -1,3 +1,5 @@
 composer.phar
 vendor/
 /nbproject/
+/tests/PowderBlue/Stringspector/Plugin/TelephoneNumbersTest/*.csv
+.DS_Store

@@ -41,7 +41,7 @@ I prefer to be contacted by email, but you can also telephone me.
 
 Send email to ******************* or *******************.
 
-Telephone enquirers, call +44 *************** and then dial extension 107.
+Telephone enquirers, call +****************** and then dial extension 107.
 
 Thanks,
 Dan

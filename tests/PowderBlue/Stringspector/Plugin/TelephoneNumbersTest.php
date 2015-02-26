@@ -36,6 +36,7 @@ class Test extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(false, ''),
+
         //UK:
             array(true, '(020) 0123 0123'),  //(London)
             array(true, '(0113) 012 0123'),  //(Leeds)
@@ -59,18 +60,26 @@ class Test extends \PHPUnit_Framework_TestCase
 
             array(true, '+44 (0)203 384 1801'),
             array(true, '+44 (0) 203 384 1801'),
+
         //Spain:
             //Old style:
             array(true, '93 412 46 02'),  //(Barcelona)
             array(true, '93.412.46.02'),
+
             //New style:
             array(true, '917 741 056'),  //(Madrid)
             array(true, '917.741.056'),
+
         //France:
             array(true, 'Tel : 04.50.55.35.25'),
             array(true, '+33 (0)6 82 89 15 23'),
             array(true, '+33 (0) 476 79 75 10'),
             array(true, '+33(0)476797510'),
+
+            array(true, '+377 98 06 98 99'),
+            array(true, ' +37799992550'),
+            array(true, '+377 (0)98 06 36 36'),
+            array(true, '00377 97 97 90 00'),
         );
     }
 
@@ -84,7 +93,7 @@ class Test extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $telephoneNumbers->found());
     }
 
-    public static function providesSomething()
+    public static function providesTextContainingTelephoneNumbers()
     {
         return array(
             array('', ''),
@@ -97,7 +106,7 @@ class Test extends \PHPUnit_Framework_TestCase
                 'You can reach me on (07000) 000000 or (01000) 000000.',
             ),
             array(
-                'You can reach me on +44 ***************.',
+                'You can reach me on +******************.',
                 'You can reach me on +44 (0)0000 000 000.',
             ),
             array(
@@ -108,7 +117,7 @@ class Test extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providesSomething
+     * @dataProvider providesTextContainingTelephoneNumbers
      */
     public function testObfuscateObfuscatesAllTelephoneNumbersInTheString($expected, $input)
     {
@@ -126,5 +135,32 @@ class Test extends \PHPUnit_Framework_TestCase
         $telephoneNumbers->obfuscate('<span class="redacted tel"></span>');
 
         $this->assertSame('Call me on <span class="redacted tel"></span>.', $stringspector->getString());
+    }
+
+    public static function providesTelephoneNumbersFromDatabaseExports()
+    {
+        $fixturesDir = __DIR__ . '/TelephoneNumbersTest';
+
+        $testMethodArgsRecords = array();
+
+        foreach (glob("{$fixturesDir}/*.csv") as $exportFilePath) {
+            $exportFileLines = file($exportFilePath);
+
+            foreach ($exportFileLines as $exportFileLine) {
+                $testMethodArgsRecords[] = array($exportFileLine);
+            }
+        }
+
+        return $testMethodArgsRecords;
+    }
+
+    /**
+     * @dataProvider providesTelephoneNumbersFromDatabaseExports
+     */
+    public function testFoundReturnsTrueForEachLineInAFile($input)
+    {
+        $telephoneNumbers = $this->createTelephoneNumbers($this->createStringspector($input));
+
+        $this->assertTrue($telephoneNumbers->found());
     }
 }
