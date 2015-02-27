@@ -20,6 +20,8 @@ class TelephoneNumbers implements PluginInterface
     /**
      * @var array
      * @todo Distill these further, if possible.
+     * @todo Try to phase out formats excluding a country code - sometimes these will pick-up parts of international 
+     * numbers!
      * @todo Aim to use zeroes at the start of telephone numbers containing no punctuation; this will help reduce 
      * ambiguity.
      */
@@ -33,7 +35,7 @@ class TelephoneNumbers implements PluginInterface
 
             '/\+(33|49|61|37\d)\d{7}\b/',                                       //+dd[d]ddddddd
             '/\+(45|47|35\d|37\d|85\d|216)\d{8}\b/',                            //+dd[d]dddddddd
-            '/\+(7|27|31|32|33|34|41|44|46|61|25\d|35\d|38\d|96\d|97\d)\d{9}\b/u',  //+dd[d]ddddddddd
+            '/\+(7|27|31|32|33|34|41|44|46|61|25\d|35\d|38\d|96\d|97\d)\d{9}\b/',   //+dd[d]ddddddddd
             '/\+(7|44|49|25\d)\d{10}\b/',                                       //+dd[d]dddddddddd
             '/\+(49|55)\d{11}\b/',                                              //+dd[d]ddddddddddd
 
@@ -45,7 +47,7 @@ class TelephoneNumbers implements PluginInterface
 
             '/\(\+45\)\d{8}\b/',                                                //(+dd)dddddddd
 
-            '/\b\d{2}\s+(\d{3}\s+){2}\d{4}\b/',                                 //dd ddd ddd dddd
+            '/(\(\+?\b\d{2}\)\s+)?(\d{3}\s+){2}\d{4}\b/',                       //dd ddd ddd dddd.  Also matches similar local format.  Moved up from "ch".
             '/\b(\d{2}\s+){5}\d{2}\b/',                                         //dd dd dd dd dd dd
             '/\b\d{2}\s+\(\d\)\s+\d{4}\s+\d{5}\b/',                             //dd (d) dddd ddddd
             '/\b00\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                               //00ddd dd dd dd.  Possibly "Asia-Pacific" format.
@@ -58,12 +60,13 @@ class TelephoneNumbers implements PluginInterface
             '/\b\d{2}\s+\(\d{3}\)\s+(\d{2}\s+){2}\d{2}\b/',                     //dd (ddd) dd dd dd
             '/\b(\d{2}\s+)?(\d{3}\s+){2}\d{3}\b/u',                             //dd ddd ddd ddd.  Also matches similar local format.
             '/\b\d{2}\s+(\d{3}\s+){2}\d\s+\d{2}\b/',                            //dd ddd ddd d dd
+            '/\b\d{2}\s+\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                         //dd ddd dd dd dd
 
         //Excluding country code:
+            '/(?<!\+)\b\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                          //ddd dd dd dd.  @todo Review this.
             '/\b\d{2}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                              //dd ddd dd dd
             '/\b\d{2}\.\d{3}\.\d{2}\.\d{2}\b/',                                 //dd.ddd.dd.dd
             '/\b(\d{3}\.){2}\d{3}\b/',                                          //ddd.ddd.ddd
-            '/\b\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                                 //ddd dd dd dd
             '/\b\d{2}\s+\d{3}(\s+|-)\d{6}\b/',                                  //dd ddd dddddd
         ),
         'gb' => array(
@@ -80,14 +83,17 @@ class TelephoneNumbers implements PluginInterface
             //Others:
             '/\b\d{2}\s+\(\d\)\s*\d{10}\b/',                                    //dd (d)dddddddddd
             '/\b\d{3}\s+\d{2}\s+\d{7}\b/',                                      //ddd dd ddddddd.  Ireland.
+
             '/\b\d{2}\s+\(\d\)\d{1,2}\s+\d{3}\s+\d{2}\s+\d{3}\b/',              //dd (d)d[d] ddd dd ddd
+            '/\b\d{2}\s+\(\d\)\s*\d{3}\s+(\d{2}\s+){2}\d{3}\b/',                //dd (d)ddd dd dd ddd
+            '/\b\d{2}\s+\(\d\)(\d{3}\s+){2}\d\s+\d{3}\b/',                      //dd (d)ddd ddd d ddd
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){3}\d\s+\d{2}\b/',                 //dd (d)d dd dd dd d dd
             '/\b\d{2}\s+\(\d\)\d{3}\s+\d{2}\s+\d{3}\s+\d{2}\b/',                //dd (d)ddd dd ddd dd
-            '/\b\d{2}\s+\(\d\)\s*\d{3}\s+(\d{2}\s+){2}\d{3}\b/',                //dd (d)ddd dd dd ddd
             '/\b(00)?\d{2}\s*\(\d\)\s*\d{3}\s+\d{3}\s+\d{4}\b/',                //[00]dd (d) ddd ddd dddd
-            '/\b00\d{2}\s+(\d{3}\s+){2}\d{4}\b/',                               //00dd ddd ddd dddd
             '/\b\d{2}\s+\(\d\)\d{4}\s+\d{5}\b/',                                //dd (d)dddd ddddd
-            '/\b\d{2}\s+\(\d\)(\d{3}\s+){2}\d\s+\d{3}\b/',                      //dd (d)ddd ddd d ddd
+            '/\b\d{2}\s+\(\d\)\d{3}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                //dd (d)ddd ddd dd dd
+
+            '/\b00\d{2}\s+(\d{3}\s+){2}\d{4}\b/',                               //00dd ddd ddd dddd.  @todo Move this up?
             '/\b00\d{6}\s+\d{6}\b/',                                            //00dddddd dddddd
             '/\b\d{2}-\d{4}-\d{6}\b/',                                          //dd dddd dddddd
 
@@ -133,24 +139,19 @@ class TelephoneNumbers implements PluginInterface
             '/(\b\d{2}\s*)?\(\+?\d{1,2}\)?\s*\d{9,10}\b/',                      //dd(dd)ddddddddd[d].  Also matches similar local format.
             '/\b\d{2}\s+\(\d\)\d\s+\d\s+\d{3}\s+\d{2}\s+\d{2}\b/',              //dd (d)d d ddd dd dd
             '/\b\d{2}\s+\(\d\)\d\s+\d{2}\s+\d{4}\s+\d{2}\b/',                   //dd (d)d dd dddd dd
-            '/\b\d{3,5}\s+(\d{2}\s+){3}\d{2}\b/u',                              //ddd[d[d]] dd dd dd dd.  Monaco.
-            '/(\b\d{2})?\(\d\)\s*\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                //dd(d)ddd dd dd dd.  Also matches similar local format.
+            '/(\b\d{2}\s*)?\(?\b\d\)?\s*\d{3}\s+(\d{2}\s+){2}\d{2}\b/',         //dd d ddd dd dd dd.  Also matches similar local format.
             '/\b\d{4}\s+\d\s+(\d{2}\s+){3}\d\b/',                               //dddd d dd dd dd d
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){3}\d\b/',                         //dd (d)d dd dd dd d
             '/\b\d{2}\s+\(\d\)\d\s+\d{2}\s+\d\s+\d{3}\s+\d{2}\b/',              //dd (d)d dd d ddd dd
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){2}-?\d\s+\d{2}\b/',               //dd (d)d dd dd d dd
-
-        //Excluding country code:
-            '/\b(\d{2}(\s+|\.)){4}\d{2}\b/',                                    //dd dd dd dd dd
         ),
         'ch' => array(
         //Including country code:
-            '/\b(00)?\d{2}\s+(\(\d\))?\d{1,2}\s+\d{3}(\s+|\.)\d{2}(\s+|\.)\d{2}\b/u',   //[00]dd [(0)]d[d] ddd dd dd.  OFCOM international format.
+            '/(\b(00)?\d{2}\s+)?\(?\b\d\)?\d{1,2}\s+\d{3}(\s+|\.)\d{2}(\s+|\.)\d{2}\b/u',   //[00]dd [(0)]d[d] ddd dd dd.  OFCOM international format.  Also matches similar local format.
 
             '/\b\d{2}\s+\(\d\)\d{3}\s+\d{6}\b/',                                //dd (d)ddd dddddd
             '/\b\d{2}\s+\(\d\)\s*\d{2}\s+\d{7}\b/',                             //dd (d)dd ddddddd
 
-            '/\(\+\d{2}\)\s+(\d{3}\s+){2}\d{4}\b/',                             //(+dd) ddd ddd dddd
             '/\b\d{2}\s*\(\s*\d\)\s*\d{2}\s+\d{3}\s+\d{4}\b/',                  //dd (d)dd ddd dddd
             '/\b(00)?(\d{2}\s+){2}\d{3}\s+\d{4}\b/',                            //[00]dd dd ddd dddd
 
@@ -160,10 +161,6 @@ class TelephoneNumbers implements PluginInterface
             '/\b\d{2}\s+\(\d\)(\d{2}\s+){3}\d{3}\b/',                           //dd (d)dd dd dd ddd
             '/\b\d{2}\s+\(\d\)(\d{2}\s+){2}\d{3}\s+\d{2}\b/',                   //dd (d)dd dd ddd dd
             '/\b\d{2}\s+\(\d\)\d\s+(\d{3}\s+){2}\d{2}\b/',                      //dd (d)d ddd ddd dd
-
-        //Excluding country code:
-            '/\b\d{2,3}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                            //0dd ddd dd dd.  OFCOM local format.
-            '/\b(\d{3}\s+){2}\d{4}\b/',                                         //ddd ddd dddd
         ),
         'it' => array(
         //Including country code:
@@ -182,7 +179,7 @@ class TelephoneNumbers implements PluginInterface
 
             //Others:
             '/\b\d{2}\.\d{2}\.\d{3}\.\d{5}\b/',                                 //dd dd ddd ddddd
-            '/\b\d{2}(\s+|\.)\d{9}\b/u',                                        //dd.ddddddddd
+            '/\b\d{2}(\s+|\.)\d{9}\b/',                                         //dd.ddddddddd
         ),
         'de' => array(
         //Including country code:
@@ -198,7 +195,7 @@ class TelephoneNumbers implements PluginInterface
         'us' => array(
         //Including country code:
             '/\b\d\s+\d{3}\s+\d{7}\b/',                                         //d ddd ddddddd
-            '/\(\d{3}\)\s+(\d{3}\s+){2}\d{4}\b/',                               //(ddd) ddd ddd dddd
+            '/\(?\b(00)?\d\)?\s+(\d{3}\s+){2}\d{4}\b/',                         //[00]d ddd ddd dddd
         ),
         'nl' => array(
         //Including country code:
@@ -208,7 +205,7 @@ class TelephoneNumbers implements PluginInterface
         ),
         'ru' => array(
         //Including country code:
-            '/\b\d-(\d{3}-){2}\d{2}-\d{2}\b/',                                  //d ddd ddd dd dd
+            '/\b\d(\s+|-)(\d{3}(\s+|-)){2}\d{2}(\s+|-)\d{2}\b/',                //d ddd ddd dd dd
             '/\b\d{1}\s*\(?\d{3}\)?\s*\d{6,7}\b/',                              //d ddd ddddddd
         ),
         'ae' => array(

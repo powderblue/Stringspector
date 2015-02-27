@@ -96,7 +96,11 @@ class Test extends \PHPUnit_Framework_TestCase
     public static function providesTextContainingTelephoneNumbers()
     {
         return array(
-            array('', ''),
+            array(
+                '',
+                ''
+            ),
+
             array(
                 'You can reach me on ************ or ************.',
                 'You can reach me on 07000 000000 or 01000 000000.',
@@ -112,6 +116,40 @@ class Test extends \PHPUnit_Framework_TestCase
             array(
                 'You can reach me on *************.',
                 'You can reach me on 00000 000 000.',
+            ),
+
+            array(
+                '+*************.  Start.',
+                '+33 693+633333.  Start.',
+            ),
+            array(
+                'End.  +*************',
+                'End.  +33 693+633333',
+            ),
+            array(
+                'Call me +*************/+*************',
+                'Call me +33 693+633333/+33 789 456123',
+            ),
+            array(
+                'In the +************* middle.',
+                'In the +33 693+633333 middle.',
+            ),
+
+            array(
+                '+***************.  Start.',
+                '+377 92 05 00 50.  Start.',
+            ),
+            array(
+                'End.  +***************',
+                'End.  +377 92 05 00 50',
+            ),
+            array(
+                'Call me +***************/+*****************',
+                'Call me +377 92 05 00 50/+377 (0)98 062 121',
+            ),
+            array(
+                'In the +*************** middle.',
+                'In the +377 92 05 00 50 middle.',
             ),
         );
     }
