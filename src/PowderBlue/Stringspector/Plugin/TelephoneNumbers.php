@@ -22,7 +22,6 @@ class TelephoneNumbers implements PluginInterface
      * @todo Distill these further, if possible.
      * @todo Aim to use zeroes at the start of telephone numbers containing no punctuation; this will help reduce 
      * ambiguity.
-     * @codingStandardsIgnoreStart
      */
     private static $countryRegExps = array(
         '*' => array(
@@ -225,7 +224,6 @@ class TelephoneNumbers implements PluginInterface
             '/\b(\d{3}\s+){2}\d{6}\b/',                                         //ddd ddd dddddd
         ),
     );
-    /*@codingStandardsIgnoreEnd*/
 
     /**
      * @var PowderBlue\Stringspector\Stringspector

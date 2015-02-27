@@ -18,7 +18,7 @@
     },
     "scripts": {
         "app:test": "cd tests && phpunit .",
-        "app:lint": "~/.composer/vendor/bin/phpcs --standard=PSR2 --extensions=php -p --ignore=/vendor/ .",
+        "app:lint": "~/.composer/vendor/bin/phpcs --standard=phpcs.xml --extensions=php -p --ignore=/vendor/ .",
         "app:quality-check": [
             "composer app:test",
             "composer app:lint"
