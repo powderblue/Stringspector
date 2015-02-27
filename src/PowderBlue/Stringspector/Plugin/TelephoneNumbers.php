@@ -19,11 +19,10 @@ class TelephoneNumbers implements PluginInterface
 {
     /**
      * @var array
-     * @todo Distill these further, if possible.
+     * @todo Continue grouping, and merging, patterns.
      * @todo Try to phase out formats excluding a country code - sometimes these will pick-up parts of international 
      * numbers!
-     * @todo Aim to use zeroes at the start of telephone numbers containing no punctuation; this will help reduce 
-     * ambiguity.
+     * @todo Use zeroes to help reduce ambiguity.
      */
     private static $countryRegExps = array(
         '*' => array(
@@ -71,31 +70,34 @@ class TelephoneNumbers implements PluginInterface
         ),
         'gb' => array(
         //Including country code:
-            '/(\b\d{2}\s*)?\(\s*\d\)\s*\d{4}\s+\d{3}\s+\d{3}\b/',               //dd(d)dddd ddd ddd.  Also matches similar local format.
-            '/\b\d{2}\s+\d{4}\s+\d{3}\s+\d{3}\b/',                              //dd dddd ddd ddd
+            //With regional code leading zero:
+
+            '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){3}\d\s+\d{2}\b/',                 //dd (d)d dd dd dd d dd
+
+            '/\b\d{2}\s+\(\d\)\d{3}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                //dd (d)ddd ddd dd dd
+            '/\b\d{2}\s+\(\d\)(\d{3}\s+){2}\d\s+\d{3}\b/',                      //dd (d)ddd ddd d ddd
+            '/\b\d{2}\s+\(\d\)\s*\d{3}\s+(\d{2}\s+){2}\d{3}\b/',                //dd (d)ddd dd dd ddd
+            '/\b\d{2}\s+\(\d\)\d{3}\s+\d{2}\s+\d{3}\s+\d{2}\b/',                //dd (d)ddd dd ddd dd
+            '/\b\d{2}\s+\(\d\)\d{1,2}\s+\d{3}\s+\d{2}\s+\d{3}\b/',              //dd (d)d[d] ddd dd ddd
+
+            '/(\b\d{2}\s+)?\(?\b0\)?\s*\d{4}\s+\d{3}\s+\d{3}\b/',               //dd (0)dddd ddd ddd.  Also matches similar local format.
+            '/\b\d{2}\s+\(?0\)?\s*\d{3}\s+\d{4}\s+\d{3}\b/',                    //dd (0)ddd dddd ddd
+
+            '/\b\d{2}\s+\(?0\)?\d{4}\s+\d{5,6}\b/',                             //dd (0)dddd ddddd[d]
+            '/\b\d{2}\s+\(?0\)?\d{3}\s+\d{7}\b/',                               //dd (0)ddd ddddddd
+
+            //Excluding regional code leading zero:
 
             '/\b\d{2}\s+\d{3}\s+\d{4}\s+\d{3}\b/',                              //dd ddd dddd ddd
-            '/\b\d{2}\s+\(\d\)\s*\d{3}\s+\d{4}\s+\d{3}\b/',                     //dd (d)ddd dddd ddd
+            '/\b\d{2}\s+\d{4}\s+\d{3}\s+\d{3}\b/',                              //dd dddd ddd ddd
 
-            '/\b\d{2}\s+\(\d\)\d{3}\s+\d{7}\b/',                                //dd (d)ddd ddddddd
             '/\b\d{2}\s+\d{3}\s+\d{7}\b/',                                      //dd ddd ddddddd
+            '/\b\d{2}-\d{4}-\d{6}\b/',                                          //dd dddd dddddd
 
             //Others:
-            '/\b\d{2}\s+\(\d\)\s*\d{10}\b/',                                    //dd (d)dddddddddd
             '/\b\d{3}\s+\d{2}\s+\d{7}\b/',                                      //ddd dd ddddddd.  Ireland.
-
-            '/\b\d{2}\s+\(\d\)\d{1,2}\s+\d{3}\s+\d{2}\s+\d{3}\b/',              //dd (d)d[d] ddd dd ddd
-            '/\b\d{2}\s+\(\d\)\s*\d{3}\s+(\d{2}\s+){2}\d{3}\b/',                //dd (d)ddd dd dd ddd
-            '/\b\d{2}\s+\(\d\)(\d{3}\s+){2}\d\s+\d{3}\b/',                      //dd (d)ddd ddd d ddd
-            '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){3}\d\s+\d{2}\b/',                 //dd (d)d dd dd dd d dd
-            '/\b\d{2}\s+\(\d\)\d{3}\s+\d{2}\s+\d{3}\s+\d{2}\b/',                //dd (d)ddd dd ddd dd
-            '/\b(00)?\d{2}\s*\(\d\)\s*\d{3}\s+\d{3}\s+\d{4}\b/',                //[00]dd (d) ddd ddd dddd
-            '/\b\d{2}\s+\(\d\)\d{4}\s+\d{5}\b/',                                //dd (d)dddd ddddd
-            '/\b\d{2}\s+\(\d\)\d{3}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                //dd (d)ddd ddd dd dd
-
             '/\b00\d{2}\s+(\d{3}\s+){2}\d{4}\b/',                               //00dd ddd ddd dddd.  @todo Move this up?
             '/\b00\d{6}\s+\d{6}\b/',                                            //00dddddd dddddd
-            '/\b\d{2}-\d{4}-\d{6}\b/',                                          //dd dddd dddddd
 
         //Excluding country code:
             '/\(\d{6}\)\s+\d{4,5}\b/',                                          //(dddddd) dddd[d]
@@ -206,7 +208,7 @@ class TelephoneNumbers implements PluginInterface
         'ru' => array(
         //Including country code:
             '/\b\d(\s+|-)(\d{3}(\s+|-)){2}\d{2}(\s+|-)\d{2}\b/',                //d ddd ddd dd dd
-            '/\b\d{1}\s*\(?\d{3}\)?\s*\d{6,7}\b/',                              //d ddd ddddddd
+            '/\b\d(\s+|\()\d{3}(\s+|\))\d{6,7}\b/',                             //d ddd dddddd[d]
         ),
         'ae' => array(
         //Including country code:
@@ -219,6 +221,10 @@ class TelephoneNumbers implements PluginInterface
         'pt' => array(
         //Including country code:
             '/\b(\d{3}\s+){2}\d{6}\b/',                                         //ddd ddd dddddd
+        ),
+        'au' => array(
+        //Including country code:
+            '/\+\d{2}\s+\d\s+(\d{3}\s+){2}\d{2}/',                              //dd d ddd ddd dd.  A special case - note the leading "+" and lack of a trailing "\b".
         ),
     );
 

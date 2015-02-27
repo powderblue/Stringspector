@@ -61,6 +61,8 @@ class Test extends \PHPUnit_Framework_TestCase
             array(true, '+44 (0)203 384 1801'),
             array(true, '+44 (0) 203 384 1801'),
 
+            array(true, '+44 (0)1234 012345'),
+
         //Spain:
             //Old style:
             array(true, '93 412 46 02'),  //(Barcelona)
@@ -150,6 +152,10 @@ class Test extends \PHPUnit_Framework_TestCase
             array(
                 'In the +*************** middle.',
                 'In the +377 92 05 00 50 middle.',
+            ),
+            array(
+                'Instead of using this chat, please call me on +*****************.',
+                'Instead of using this chat, please call me on +44 (0)1234 012345.',
             ),
         );
     }
