@@ -9,14 +9,23 @@ namespace PowderBlue\Stringspector;
 
 class Factory
 {
+    /**
+     * @return Stringspector
+     *
+     * @throws \ReflectionException
+     */
     public function create()
     {
-        $reflectionClass = new \ReflectionClass('PowderBlue\Stringspector\Stringspector');
+        $reflectionClass = new \ReflectionClass(Stringspector::class);
+
+        /* @var $stringspector Stringspector */
         $stringspector = $reflectionClass->newInstanceArgs(func_get_args());
 
-        $stringspector->setPlugin('emailAddresses', new Plugin\EmailAddresses());
-        $stringspector->setPlugin('telephoneNumbers', new Plugin\TelephoneNumbers());
-
-        return $stringspector;
+        return $stringspector
+            ->setPlugin('obfuscator', new Plugin\Obfuscator())
+            ->setPlugin('emailAddresses', new Plugin\EmailAddresses())
+            ->setPlugin('telephoneNumbers', new Plugin\TelephoneNumbers())
+            ->setPlugin('websiteUrls', new Plugin\WebsiteUrls())
+        ;
     }
 }

@@ -5,12 +5,12 @@
  * @author Dan Bettles <dan@powder-blue.com>
  */
 
-namespace Tests\PowderBlue\Stringspector\Stringspector;
+namespace Tests\PowderBlue\Stringspector;
 
 use PowderBlue\Stringspector\Stringspector;
-use PowderBlue\Stringspector\Plugin\PluginInterface;
+use PowderBlue\Stringspector\Plugin\AbstractPlugin;
 
-class Test extends \PHPUnit_Framework_TestCase
+class StringspectorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIsConstructedUsingAString()
     {
@@ -81,32 +81,15 @@ class Test extends \PHPUnit_Framework_TestCase
 }
 
 //@codingStandardsIgnoreStart
-class Plugin001 implements PluginInterface
+class Plugin001 extends AbstractPlugin
 {
-    public function setStringspector(Stringspector $stringspector)
-    {
-    }
 }
 
-class Plugin002 implements PluginInterface
+class Plugin002 extends AbstractPlugin
 {
-    public function setStringspector(Stringspector $stringspector)
-    {
-    }
 }
 
-class Plugin003 implements PluginInterface
+class Plugin003 extends AbstractPlugin
 {
-    private $stringspector;
-
-    public function setStringspector(Stringspector $stringspector)
-    {
-        $this->stringspector = $stringspector;
-    }
-
-    public function getStringspector()
-    {
-        return $this->stringspector;
-    }
 }
 //@codingStandardsIgnoreEnd

@@ -7,23 +7,18 @@
 
 namespace PowderBlue\Stringspector;
 
-use PowderBlue\Stringspector\Plugin\PluginInterface;
+use PowderBlue\Stringspector\Plugin\AbstractPlugin;
 
 class Stringspector
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $string;
 
-    /**
-     * @var PowderBlue\Stringspector\Plugin\PluginInterface[]
-     */
-    private $plugins = array();
+    /** @var AbstractPlugin[] */
+    private $plugins = [];
 
     /**
-     * @param string [$string = '']
-     * @return void
+     * @param string $string
      */
     public function __construct($string = '')
     {
@@ -32,11 +27,14 @@ class Stringspector
 
     /**
      * @param string $string
-     * @return void
+     *
+     * @return Stringspector
      */
     public function setString($string)
     {
         $this->string = $string;
+
+        return $this;
     }
 
     /**
@@ -49,6 +47,7 @@ class Stringspector
 
     /**
      * @param string $name
+     *
      * @return bool
      */
     private function hasPlugin($name)
@@ -58,7 +57,9 @@ class Stringspector
 
     /**
      * @param string $name
-     * @return PowderBlue\Stringspector\Plugin\PluginInterface
+     *
+     * @return AbstractPlugin
+     *
      * @throws \OutOfBoundsException If the plugin with the specified name does not exist.
      */
     public function getPlugin($name)
@@ -71,19 +72,26 @@ class Stringspector
     }
 
     /**
-     * @param string $name
-     * @param PowderBlue\Stringspector\Plugin\PluginInterface $plugin
-     * @return void
+     * @param string         $name
+     * @param AbstractPlugin $plugin
+     *
+     * @return Stringspector
      */
-    public function setPlugin($name, PluginInterface $plugin)
+    public function setPlugin($name, AbstractPlugin $plugin)
     {
         $this->plugins[$name] = $plugin;
-        $this->getPlugin($name)->setStringspector($this);
+        $this
+            ->getPlugin($name)
+            ->setStringspector($this)
+        ;
+
+        return $this;
     }
 
     /**
      * @param string $name
-     * @return PowderBlue\Stringspector\Plugin\PluginInterface
+     *
+     * @return AbstractPlugin
      */
     public function __get($name)
     {

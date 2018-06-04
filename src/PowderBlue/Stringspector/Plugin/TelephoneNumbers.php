@@ -7,25 +7,23 @@
 
 namespace PowderBlue\Stringspector\Plugin;
 
-use PowderBlue\Stringspector\Stringspector;
-
 /**
  * Manipulates telephone numbers in a string.
- * 
+ *
  * @todo Look for, and deal with, disguised telephone numbers?
  * @todo At startup, 'compile' a single regular expression for each country?  Will that improve performance?
  */
-class TelephoneNumbers implements PluginInterface
+class TelephoneNumbers extends AbstractPlugin
 {
     /**
      * @var array
      * @todo Continue grouping, and merging, patterns.
-     * @todo Try to phase out formats excluding a country code - sometimes these will pick-up parts of international 
+     * @todo Try to phase out formats excluding a country code - sometimes these will pick-up parts of international
      * numbers!
      * @todo Use zeroes to help reduce ambiguity.
      */
-    private static $countryRegExps = array(
-        '*' => array(
+    private static $countryRegExps = [
+        '*' => [
         //Including country code:
             '/\+(44)\s+\d{11}\b/',                                              //+dd ddddddddddd
             '/\+(44)\s+\d{10}\b/',                                              //+dd dddddddddd
@@ -50,8 +48,8 @@ class TelephoneNumbers implements PluginInterface
             '/\b(\d{2}\s+){5}\d{2}\b/',                                         //dd dd dd dd dd dd
             '/\b\d{2}\s+\(\d\)\s+\d{4}\s+\d{5}\b/',                             //dd (d) dddd ddddd
             '/\b00\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                               //00ddd dd dd dd.  Possibly "Asia-Pacific" format.
-        ),
-        'es' => array(
+        ],
+        'es' => [
         //Including country code:
             '/\b\d{2}\s+(\d{3}\s+){2}\d{2}\b/',                                 //dd ddd ddd dd
             '/\b\d{2}\s+\(\d{3}\)\s+\d{3}\s+\d{3}\b/',                          //dd (ddd) ddd ddd
@@ -67,8 +65,8 @@ class TelephoneNumbers implements PluginInterface
             '/\b\d{2}\.\d{3}\.\d{2}\.\d{2}\b/',                                 //dd.ddd.dd.dd
             '/\b(\d{3}\.){2}\d{3}\b/',                                          //ddd.ddd.ddd
             '/\b\d{2}\s+\d{3}(\s+|-)\d{6}\b/',                                  //dd ddd dddddd
-        ),
-        'gb' => array(
+        ],
+        'gb' => [
         //Including country code:
             //With regional code leading zero:
 
@@ -108,8 +106,8 @@ class TelephoneNumbers implements PluginInterface
             '/\b\d{5}\s+\d{3}\s+\d{3}\b/',                                      //ddddd ddd ddd
             '/\b\d{4}\s+(\d{4}|\d{6})\b/',                                      //dddd dddd[dd]
             '/\b\d{4}\s+\d{2}\s+\d{2}\b/',                                      //dddd dd dd
-        ),
-        'fr' => array(
+        ],
+        'fr' => [
         //Including country code:
             '/\b(00)?\d{2}\s*(\(\d\))?\d{3}(\s+|[\+\-])\d{6}\b/',               //[00]dd [(d)]ddd dddddd
             '/\b\d{2}\s+\(\d\)\d\s+\d{2}\s+\d{6}\b/',                           //dd (d)d dd dddddd
@@ -146,8 +144,8 @@ class TelephoneNumbers implements PluginInterface
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){3}\d\b/',                         //dd (d)d dd dd dd d
             '/\b\d{2}\s+\(\d\)\d\s+\d{2}\s+\d\s+\d{3}\s+\d{2}\b/',              //dd (d)d dd d ddd dd
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){2}-?\d\s+\d{2}\b/',               //dd (d)d dd dd d dd
-        ),
-        'ch' => array(
+        ],
+        'ch' => [
         //Including country code:
             '/(\b(00)?\d{2}\s+)?\(?\b\d\)?\d{1,2}\s+\d{3}(\s+|\.)\d{2}(\s+|\.)\d{2}\b/u',   //[00]dd [(0)]d[d] ddd dd dd.  OFCOM international format.  Also matches similar local format.
 
@@ -163,8 +161,8 @@ class TelephoneNumbers implements PluginInterface
             '/\b\d{2}\s+\(\d\)(\d{2}\s+){3}\d{3}\b/',                           //dd (d)dd dd dd ddd
             '/\b\d{2}\s+\(\d\)(\d{2}\s+){2}\d{3}\s+\d{2}\b/',                   //dd (d)dd dd ddd dd
             '/\b\d{2}\s+\(\d\)\d\s+(\d{3}\s+){2}\d{2}\b/',                      //dd (d)d ddd ddd dd
-        ),
-        'it' => array(
+        ],
+        'it' => [
         //Including country code:
             '/\b\d{2}\s+\(\d\)\d\s+(\d\s+){2}(\d{2}\s+){2}\d{2}\b/',            //dd (d)d d d dd dd dd
 
@@ -182,88 +180,86 @@ class TelephoneNumbers implements PluginInterface
             //Others:
             '/\b\d{2}\.\d{2}\.\d{3}\.\d{5}\b/',                                 //dd dd ddd ddddd
             '/\b\d{2}(\s+|\.)\d{9}\b/',                                         //dd.ddddddddd
-        ),
-        'de' => array(
+        ],
+        'de' => [
         //Including country code:
             '/\b\d{2}\s+\d{3}\s+\d{2}\s+\d{3}\b/',                              //dd ddd dd ddd
             '/\b\d{4}\s+\d{3}\s+\d{5}\b/',                                      //dddd ddd ddddd
             '/\b\d{5}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                              //ddddd ddd dd dd
-        ),
-        'dk' => array(
+        ],
+        'dk' => [
         //Including country code:
             '/\b\d{2}\s+\(\d\)\d\s+\d{3}\s+\d{4}\b/',                           //dd (d)d ddd dddd
             '/\b(00)?\d{2}\s+\d{8}\b/',                                         //[00]dd dddddddd
-        ),
-        'us' => array(
+        ],
+        'us' => [
         //Including country code:
             '/\b\d\s+\d{3}\s+\d{7}\b/',                                         //d ddd ddddddd
             '/\(?\b(00)?\d\)?\s+(\d{3}\s+){2}\d{4}\b/',                         //[00]d ddd ddd dddd
-        ),
-        'nl' => array(
+        ],
+        'nl' => [
         //Including country code:
             '/\b\d{2}\s+\(\d\)\d\s+\d{2}\s+\d{3}\s+\d{3}\b/',                   //dd (d)d dd ddd ddd
             '/\b\d{2}\s+\d\s+\d{3}\s+\d{5}\b/',                                 //dd d ddd ddddd
             '/\b\d{2}\s+\d\s+\d{8}\b/',                                         //dd d dddddddd
-        ),
-        'ru' => array(
+        ],
+        'ru' => [
         //Including country code:
             '/\b\d(\s+|-)(\d{3}(\s+|-)){2}\d{2}(\s+|-)\d{2}\b/',                //d ddd ddd dd dd
             '/\b\d(\s+|\()\d{3}(\s+|\))\d{6,7}\b/',                             //d ddd dddddd[d]
-        ),
-        'ae' => array(
+        ],
+        'ae' => [
         //Including country code:
             '/\b00\d{3}\s+\d{2}\s+\d{7}\b/',                                    //00ddd dd ddddddd
-        ),
-        'th' => array(
+        ],
+        'th' => [
         //Including country code:
             '/\b\d{2}\s+\d{3}\s+\d{8}\b/',                                      //dd ddd dddddddd
-        ),
-        'pt' => array(
+        ],
+        'pt' => [
         //Including country code:
             '/\b(\d{3}\s+){2}\d{6}\b/',                                         //ddd ddd dddddd
-        ),
-        'au' => array(
+        ],
+        'au' => [
         //Including country code:
             '/\+\d{2}\s+\d\s+(\d{3}\s+){2}\d{2}/',                              //dd d ddd ddd dd.  A special case - note the leading "+" and lack of a trailing "\b".
-        ),
-    );
+        ],
+    ];
 
     /**
-     * @var PowderBlue\Stringspector\Stringspector
+     * @return array
      */
-    private $stringspector;
-
-    /**
-     * @param PowderBlue\Stringspector\Stringspector $stringspector
-     * @return void
-     */
-    public function setStringspector(Stringspector $stringspector)
+    private function getRegExps()
     {
-        $this->stringspector = $stringspector;
-    }
+        $regExps = [];
 
-    /**
-     * @return PowderBlue\Stringspector\Stringspector
-     */
-    private function getStringspector()
-    {
-        return $this->stringspector;
+        foreach (self::$countryRegExps as $countryRegExps) {
+            foreach ($countryRegExps as $countryRegExp) {
+                $regExps[] = $countryRegExp;
+            }
+        }
+
+        return $regExps;
     }
 
     /**
      * Returns TRUE if there appears to be a telephone number in the string, or FALSE otherwise.
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public function found()
     {
-        $string = $this->getStringspector()->getString();
+        /* @var $obfuscatorPlugin Obfuscator */
+        $obfuscatorPlugin = $this
+            ->getStringspector()
+            ->getPlugin('obfuscator')
+        ;
 
-        foreach (self::$countryRegExps as $regExps) {
-            foreach ($regExps as $regExp) {
-                if (preg_match($regExp, $string)) {
-                    return true;
-                }
+        $regExps = $this->getRegExps();
+
+        foreach ($regExps as $regExp) {
+            if ($obfuscatorPlugin->matchAll($regExp)) {
+                return true;
             }
         }
 
@@ -271,29 +267,20 @@ class TelephoneNumbers implements PluginInterface
     }
 
     /**
-     * @param mixed [$replacement]
-     * @return void
+     * @param string|null $replacement
      */
-    public function obfuscate()
+    public function obfuscate($replacement = null)
     {
-        $string = $this->getStringspector()->getString();
+        /* @var $obfuscatorPlugin Obfuscator */
+        $obfuscatorPlugin = $this
+            ->getStringspector()
+            ->getPlugin('obfuscator')
+        ;
 
-        foreach (self::$countryRegExps as $regExps) {
-            foreach ($regExps as $regExp) {
-                $telNoMatches = array();
-                $telNoFound = (bool) preg_match_all($regExp, $string, $telNoMatches);
+        $regExps = $this->getRegExps();
 
-                if (!$telNoFound) {
-                    continue;
-                }
-
-                foreach ($telNoMatches[0] as $telNo) {
-                    $obfuscatedTelNo = func_num_args() ? func_get_arg(0) : str_repeat('*', strlen($telNo));
-                    $string = str_replace($telNo, $obfuscatedTelNo, $string);
-                }
-            }
+        foreach ($regExps as $regExp) {
+            $obfuscatorPlugin->obfuscateAll($regExp, $replacement);
         }
-
-        $this->getStringspector()->setString($string);
     }
 }
