@@ -258,7 +258,7 @@ class TelephoneNumbers extends AbstractPlugin
         $regExps = $this->getRegExps();
 
         foreach ($regExps as $regExp) {
-            if ($obfuscatorPlugin->matchAll($regExp)) {
+            if (!empty($obfuscatorPlugin->matchAll($regExp))) {
                 return true;
             }
         }

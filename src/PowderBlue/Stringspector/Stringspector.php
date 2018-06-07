@@ -97,4 +97,15 @@ class Stringspector
     {
         return $this->getPlugin($name);
     }
+
+    /**
+     * @param string $search
+     * @param string $replacement
+     *
+     * @return Stringspector
+     */
+    public function replaceString($search, $replacement)
+    {
+        return $this->setString(str_replace($search, $replacement, $this->getString()));
+    }
 }

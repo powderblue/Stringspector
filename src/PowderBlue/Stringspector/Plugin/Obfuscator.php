@@ -5,34 +5,41 @@ namespace PowderBlue\Stringspector\Plugin;
 class Obfuscator extends AbstractPlugin
 {
     /**
-     * @param string     $regex
-     * @param array|null $matches
+     * @param string $regex
      *
-     * @return bool
+     * @return array
      */
-    public function matchAll($regex, array &$matches = null)
+    public function matchAll($regex)
     {
-        return (bool) preg_match_all($regex, $this->getString(), $matches);
+        $matches = [];
+
+        preg_match_all($regex, $this->getString(), $matches);
+
+        return reset($matches);
     }
 
     /**
      * @param string      $regex
-     * @param string|null $replacement
+     * @param string|null $userReplace
      */
-    public function obfuscateAll($regex, $replacement = null)
+    public function obfuscateAll($regex, $userReplace = null)
     {
-        $matches = [];
+        $matches = $this->matchAll($regex);
 
-        $found = $this->matchAll($regex, $matches);
-
-        if (!$found) {
+        if (empty($matches)) {
             return;
         }
 
-        foreach ($matches[0] as $match) {
-            $obfuscated = $replacement ?: $this->createDefaultReplacementString(strlen($match));
+        foreach ($matches as $match) {
+            $finalReplace = null === $userReplace
+                ? $this->createDefaultReplacementString(strlen($match))
+                : $userReplace
+            ;
 
-            $this->replaceWithObfuscated($match, $obfuscated);
+            $this
+                ->getStringspector()
+                ->replaceString($match, $finalReplace)
+            ;
         }
     }
 
@@ -45,19 +52,5 @@ class Obfuscator extends AbstractPlugin
     private function createDefaultReplacementString($length = 1, $replacementChar = '*')
     {
         return str_repeat($replacementChar, $length);
-    }
-
-    /**
-     * @param string $search
-     * @param string $obfuscated
-     */
-    private function replaceWithObfuscated($search, $obfuscated)
-    {
-        $string = str_replace($search, $obfuscated, $this->getString());
-
-        $this
-            ->getStringspector()
-            ->setString($string)
-        ;
     }
 }
