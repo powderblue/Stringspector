@@ -35,13 +35,26 @@ abstract class AbstractPlugin
     }
 
     /**
-     * @return string
+     * @param string $name
+     * @param array $arguments
+     *
+     * @return mixed
      */
-    protected function getString()
+    public function __call($name, array $arguments)
     {
-        return $this
-            ->getStringspector()
-            ->getString()
-        ;
+        return call_user_func_array([$this->getStringspector(), $name], $arguments);
+    }
+
+    /**
+     * @param string $search
+     * @param string $replacement
+     *
+     * @return AbstractPlugin
+     */
+    protected function replaceString($search, $replacement)
+    {
+        $this->setString(str_replace($search, $replacement, $this->getString()));
+
+        return $this;
     }
 }

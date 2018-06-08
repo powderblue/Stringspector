@@ -250,10 +250,7 @@ class TelephoneNumbers extends AbstractPlugin
     public function found()
     {
         /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this
-            ->getStringspector()
-            ->getPlugin('obfuscator')
-        ;
+        $obfuscatorPlugin = $this->getPlugin('obfuscator');
 
         $regExps = $this->getRegExps();
 
@@ -272,10 +269,7 @@ class TelephoneNumbers extends AbstractPlugin
     public function obfuscate($replacement = null)
     {
         /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this
-            ->getStringspector()
-            ->getPlugin('obfuscator')
-        ;
+        $obfuscatorPlugin = $this->getPlugin('obfuscator');
 
         $regExps = $this->getRegExps();
 

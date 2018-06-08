@@ -9,6 +9,9 @@ namespace PowderBlue\Stringspector;
 
 use PowderBlue\Stringspector\Plugin\AbstractPlugin;
 
+/**
+ * `Stringspector` is the framework: a _plugin_ is more like a string object.
+ */
 class Stringspector
 {
     /** @var string */
@@ -96,16 +99,5 @@ class Stringspector
     public function __get($name)
     {
         return $this->getPlugin($name);
-    }
-
-    /**
-     * @param string $search
-     * @param string $replacement
-     *
-     * @return Stringspector
-     */
-    public function replaceString($search, $replacement)
-    {
-        return $this->setString(str_replace($search, $replacement, $this->getString()));
     }
 }

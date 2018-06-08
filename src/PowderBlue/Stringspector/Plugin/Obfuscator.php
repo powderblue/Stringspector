@@ -32,10 +32,7 @@ class Obfuscator extends AbstractPlugin
                 : $userReplace
             ;
 
-            $this
-                ->getStringspector()
-                ->replaceString($match, $finalReplace)
-            ;
+            $this->replaceString($match, $finalReplace);
         }
     }
 

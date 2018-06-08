@@ -12,10 +12,7 @@ class WebsiteUrls extends AbstractPlugin
     public function found()
     {
         /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this
-            ->getStringspector()
-            ->getPlugin('obfuscator')
-        ;
+        $obfuscatorPlugin = $this->getPlugin('obfuscator');
 
         return $obfuscatorPlugin->matchAll(self::WEBSITE_URL_REGEXP);
     }
@@ -26,10 +23,7 @@ class WebsiteUrls extends AbstractPlugin
     public function obfuscate($replacement = null)
     {
         /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this
-            ->getStringspector()
-            ->getPlugin('obfuscator')
-        ;
+        $obfuscatorPlugin = $this->getPlugin('obfuscator');
 
         $obfuscatorPlugin->obfuscateAll(self::WEBSITE_URL_REGEXP, $replacement);
     }

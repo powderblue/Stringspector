@@ -30,10 +30,7 @@ class EmailAddresses extends AbstractPlugin
     public function found()
     {
         /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this
-            ->getStringspector()
-            ->getPlugin('obfuscator')
-        ;
+        $obfuscatorPlugin = $this->getPlugin('obfuscator');
 
         return $obfuscatorPlugin->matchAll(self::REG_EXP);
     }
@@ -46,10 +43,7 @@ class EmailAddresses extends AbstractPlugin
     public function obfuscate($replacement = null)
     {
         /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this
-            ->getStringspector()
-            ->getPlugin('obfuscator')
-        ;
+        $obfuscatorPlugin = $this->getPlugin('obfuscator');
 
         $obfuscatorPlugin->obfuscateAll(self::REG_EXP, $replacement);
     }
