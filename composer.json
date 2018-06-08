@@ -14,17 +14,18 @@
         "php": ">=5.3.0"
     },
     "require-dev": {
+        "phpunit/phpunit": "^5.7",
         "squizlabs/PHP_CodeSniffer": "^2.9.1"
     },
     "autoload": {
         "psr-4": {"PowderBlue\\": "src/PowderBlue/"}
     },
     "scripts": {
-        "app:test": "cd tests && phpunit .",
-        "app:lint": "vendor/bin/phpcs --standard=phpcs.xml --extensions=php -p src tests",
-        "app:quality-check": [
-            "composer app:test",
-            "composer app:lint"
+        "dev:code:test": "phpunit tests",
+        "dev:code:lint": "phpcs --standard=phpcs.xml --extensions=php -p src tests",
+        "dev:code:check-quality": [
+            "@dev:code:test",
+            "@dev:code:lint"
         ]
     }
 }
