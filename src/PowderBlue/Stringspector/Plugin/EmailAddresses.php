@@ -35,7 +35,7 @@ class EmailAddresses extends AbstractPlugin
             ->getPlugin('obfuscator')
         ;
 
-        return !empty($obfuscatorPlugin->matchAll(self::REG_EXP));
+        return $obfuscatorPlugin->matchAll(self::REG_EXP);
     }
 
     /**

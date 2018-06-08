@@ -17,7 +17,7 @@ class WebsiteUrls extends AbstractPlugin
             ->getPlugin('obfuscator')
         ;
 
-        return !empty($obfuscatorPlugin->matchAll(self::WEBSITE_URL_REGEXP));
+        return $obfuscatorPlugin->matchAll(self::WEBSITE_URL_REGEXP);
     }
 
     /**

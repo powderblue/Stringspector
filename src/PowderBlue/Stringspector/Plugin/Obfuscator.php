@@ -7,15 +7,11 @@ class Obfuscator extends AbstractPlugin
     /**
      * @param string $regex
      *
-     * @return array
+     * @return bool
      */
     public function matchAll($regex)
     {
-        $matches = [];
-
-        preg_match_all($regex, $this->getString(), $matches);
-
-        return reset($matches);
+        return !empty($this->getMatches($regex));
     }
 
     /**
@@ -24,11 +20,11 @@ class Obfuscator extends AbstractPlugin
      */
     public function obfuscateAll($regex, $userReplace = null)
     {
-        $matches = $this->matchAll($regex);
-
-        if (empty($matches)) {
+        if (!$this->matchAll($regex)) {
             return;
         }
+
+        $matches = $this->getMatches($regex);
 
         foreach ($matches as $match) {
             $finalReplace = null === $userReplace
@@ -41,6 +37,20 @@ class Obfuscator extends AbstractPlugin
                 ->replaceString($match, $finalReplace)
             ;
         }
+    }
+
+    /**
+     * @param string $regex
+     *
+     * @return array
+     */
+    public function getMatches($regex)
+    {
+        $matches = [];
+
+        preg_match_all($regex, $this->getString(), $matches);
+
+        return reset($matches);
     }
 
     /**
