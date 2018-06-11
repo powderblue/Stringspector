@@ -7,77 +7,21 @@
 
 namespace PowderBlue\Stringspector\Plugin;
 
-use PowderBlue\Stringspector\Stringspector;
-
 /**
  * Manipulates email addresses in a string.
- * 
- * @todo Look for, and deal with, disguised email addresses.
+ *
+ * @todo Make this a 'complex' obfuscator: implement `ObfuscatorInterface` without the help of `SimpleObfuscatorTrait`?
+ * We'll need to employ two different approaches to completely deal with email addresses: we'll need one approach to
+ * deal with 'genuine' email addresses; and another to deal with already-disguised (e.g. "dan [at] powder blue com")
+ * email addresses.
  */
-class EmailAddresses implements PluginInterface
+class EmailAddresses extends AbstractPlugin implements ObfuscatorInterface
 {
-    /**
-     * Regular expression that will match a genuine email address in a string.
-     * 
-     * @url http://www.regular-expressions.info/
-     * @var string
-     */
-    const REG_EXP = '/\b([a-zA-Z0-9\.\_\%\+\-]+)(@)([a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,4})\b/';
+    use SimpleObfuscatorTrait;
 
-    /**
-     * @var PowderBlue\Stringspector\Stringspector
-     */
-    private $stringspector;
-
-    /**
-     * @param PowderBlue\Stringspector\Stringspector $stringspector
-     * @return void
-     */
-    public function setStringspector(Stringspector $stringspector)
+    public function __construct()
     {
-        $this->stringspector = $stringspector;
-    }
-
-    /**
-     * @return PowderBlue\Stringspector\Stringspector
-     */
-    private function getStringspector()
-    {
-        return $this->stringspector;
-    }
-
-    /**
-     * Returns TRUE if there is an email address in the string, or FALSE otherwise.
-     * 
-     * @return int
-     */
-    public function found()
-    {
-        return (bool) preg_match_all(self::REG_EXP, $this->getStringspector()->getString());
-    }
-
-    /**
-     * Obfuscates all email addresses in the string.
-     * 
-     * @param mixed [$replacement]
-     * @return void
-     */
-    public function obfuscate()
-    {
-        $string = $this->getStringspector()->getString();
-
-        $emailAddressMatches = array();
-        $emailAddressFound = (bool) preg_match_all(self::REG_EXP, $string, $emailAddressMatches);
-
-        if (!$emailAddressFound) {
-            return;
-        }
-
-        foreach ($emailAddressMatches[0] as $emailAddress) {
-            $obfuscatedEmailAddress = func_num_args() ? func_get_arg(0) : str_repeat('*', strlen($emailAddress));
-            $string = str_replace($emailAddress, $obfuscatedEmailAddress, $string);
-        }
-
-        $this->getStringspector()->setString($string);
+        //See http://www.regular-expressions.info/
+        $this->setRegExp('/\b([a-zA-Z0-9\.\_\%\+\-]+)(@)([a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,4})\b/');
     }
 }

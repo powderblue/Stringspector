@@ -5,28 +5,34 @@
  * @author Dan Bettles <dan@powder-blue.com>
  */
 
-namespace Tests\PowderBlue\Stringspector\Factory;
+namespace Tests\PowderBlue\Stringspector;
 
+use PowderBlue\Stringspector\Stringspector;
 use PowderBlue\Stringspector\Factory;
+use PowderBlue\Stringspector\Plugin;
 
-class Test extends \PHPUnit_Framework_TestCase
+class FactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateCreatesAFullyLoadedStringspector()
+    public function testCreatecontactdetailsobfuscatorCreatesAPreconfiguredStringspector()
     {
-        $factory1 = new Factory();
-        $stringspector1 = $factory1->create();
+        $stringspector1 = (new Factory())
+            ->createContactDetailsObfuscator()
+        ;
 
-        $this->assertInstanceOf('PowderBlue\Stringspector\Stringspector', $stringspector1);
+        $this->assertInstanceOf(Stringspector::class, $stringspector1);
         $this->assertSame('', $stringspector1->getString());
-        $this->assertInstanceOf('PowderBlue\Stringspector\Plugin\EmailAddresses', $stringspector1->emailAddresses);
-        $this->assertInstanceOf('PowderBlue\Stringspector\Plugin\TelephoneNumbers', $stringspector1->telephoneNumbers);
+        $this->assertInstanceOf(Plugin\EmailAddresses::class, $stringspector1->emailAddresses);
+        $this->assertInstanceOf(Plugin\TelephoneNumbers::class, $stringspector1->telephoneNumbers);
+        $this->assertInstanceOf(Plugin\WebsiteUrls::class, $stringspector1->websiteUrls);
 
-        $factory2 = new Factory();
-        $stringspector2 = $factory2->create('Hello, World!');
+        $stringspector2 = (new Factory())
+            ->createContactDetailsObfuscator('Hello, World!')
+        ;
 
-        $this->assertInstanceOf('PowderBlue\Stringspector\Stringspector', $stringspector2);
+        $this->assertInstanceOf(Stringspector::class, $stringspector2);
         $this->assertSame('Hello, World!', $stringspector2->getString());
-        $this->assertInstanceOf('PowderBlue\Stringspector\Plugin\EmailAddresses', $stringspector2->emailAddresses);
-        $this->assertInstanceOf('PowderBlue\Stringspector\Plugin\TelephoneNumbers', $stringspector2->telephoneNumbers);
+        $this->assertInstanceOf(Plugin\EmailAddresses::class, $stringspector2->emailAddresses);
+        $this->assertInstanceOf(Plugin\TelephoneNumbers::class, $stringspector2->telephoneNumbers);
+        $this->assertInstanceOf(Plugin\WebsiteUrls::class, $stringspector2->websiteUrls);
     }
 }

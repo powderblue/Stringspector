@@ -7,7 +7,7 @@ $message = <<<END
 
 END;
 
-$stringspector = (new \PowderBlue\Stringspector\Factory())->create($message);
+$stringspector = (new \PowderBlue\Stringspector\Factory())->createContactDetailsObfuscator($message);
 
 $stringspector->emailAddresses->obfuscate('<span class="redacted email"></span>');
 

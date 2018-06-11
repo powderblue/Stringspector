@@ -5,88 +5,96 @@
  * @author Dan Bettles <dan@powder-blue.com>
  */
 
-namespace Tests\PowderBlue\Stringspector\Plugin\EmailAddresses;
+namespace Tests\PowderBlue\Stringspector\Plugin;
 
 use PowderBlue\Stringspector\Plugin\EmailAddresses;
-use PowderBlue\Stringspector\Stringspector;
 
-class Test extends \PHPUnit_Framework_TestCase
+class EmailAddressesTest extends AbstractAbstractPluginTest
 {
-    private function createStringspector()
-    {
-        $reflectionClass = new \ReflectionClass('PowderBlue\Stringspector\Stringspector');
-        return $reflectionClass->newInstanceArgs(func_get_args());
-    }
-
-    private function createEmailAddresses(Stringspector $stringspector)
-    {
-        $emailAddresses = new EmailAddresses();
-        $emailAddresses->setStringspector($stringspector);
-        return $emailAddresses;
-    }
-
-    public function testImplementsThePluginInterface()
-    {
-        $reflectionClass = new \ReflectionClass('PowderBlue\Stringspector\Plugin\EmailAddresses');
-
-        $this->assertTrue($reflectionClass->implementsInterface('PowderBlue\Stringspector\Plugin\PluginInterface'));
-    }
-
+    /**
+     * @return array
+     */
     public static function providesStringsContainingEmailAddresses()
     {
-        return array(
-            array(false, 'Hello, World!'),
-            array(true, 'dan@powder-blue.com'),
-            array(true, ' dan@powder-blue.com '),
-            array(true, 'My email address is dan@powder-blue.com.'),
-            array(true, 'You can use either dan@powder-blue.com or dan@seetheworld.com.'),
-        );
+        return [[
+            false,
+            'Hello, World!',
+        ], [
+            true,
+            'dan@powder-blue.com',
+        ], [
+            true,
+            ' dan@powder-blue.com ',
+        ], [
+            true,
+            'My email address is dan@powder-blue.com.',
+        ], [
+            true,
+            'You can use either dan@powder-blue.com or dan@seetheworld.com.',
+        ],];
     }
 
     /**
      * @dataProvider providesStringsContainingEmailAddresses
+     *
+     * @param bool   $expected
+     * @param string $string
+     *
+     * @throws \ReflectionException
      */
-    public function testFoundReturnsTrueIfThereIsAnEmailAddressInTheString($expected, $input)
+    public function testFoundReturnsTrueIfThereIsAnEmailAddressInTheString($expected, $string)
     {
-        $emailAddresses = $this->createEmailAddresses($this->createStringspector($input));
+        $emailAddresses = $this->createPlugin(
+            $this->createStringspector($string),
+            new EmailAddresses()
+        );
 
         $this->assertSame($expected, $emailAddresses->found());
     }
 
+    /**
+     * @return array
+     */
     public static function providesObfuscatedEmailAddresses()
     {
-        return array(
-            array(
-                '*******************',
-                'dan@powder-blue.com',
-            ),
-            array(
-                'My email address is *******************.',
-                'My email address is dan@powder-blue.com.',
-            ),
-            array(
-                'You can use either ******************* or *******************.',
-                'You can use either dan@powder-blue.com or dan@seetheworld.com.',
-            ),
-        );
+        return [[
+            '*******************',
+            'dan@powder-blue.com',
+        ], [
+            'My email address is *******************.',
+            'My email address is dan@powder-blue.com.',
+        ], [
+            'You can use either ******************* or *******************.',
+            'You can use either dan@powder-blue.com or dan@seetheworld.com.',
+        ],];
     }
 
     /**
      * @dataProvider providesObfuscatedEmailAddresses
+     *
+     * @param string $expected
+     * @param string $string
+     *
+     * @throws \ReflectionException
      */
-    public function testObfuscateObfuscatesAllEmailAddressesInTheString($expected, $input)
+    public function testObfuscateObfuscatesAllEmailAddressesInTheString($expected, $string)
     {
-        $stringspector = $this->createStringspector($input);
-        $emailAddresses = $this->createEmailAddresses($stringspector);
+        $stringspector = $this->createStringspector($string);
+
+        $emailAddresses = $this->createPlugin($stringspector, new EmailAddresses());
         $emailAddresses->obfuscate();
 
         $this->assertSame($expected, $stringspector->getString());
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function testObfuscateAcceptsAReplacementString()
     {
         $stringspector = $this->createStringspector('Email me at dan@powder-blue.com.');
-        $emailAddresses = $this->createEmailAddresses($stringspector);
+
+        $emailAddresses = $this->createPlugin($stringspector, new EmailAddresses());
         $emailAddresses->obfuscate('<span class="redacted email"></span>');
 
         $this->assertSame('Email me at <span class="redacted email"></span>.', $stringspector->getString());
