@@ -10,41 +10,18 @@ namespace PowderBlue\Stringspector\Plugin;
 /**
  * Manipulates email addresses in a string.
  *
- * @todo Look for, and deal with, disguised email addresses.
+ * @todo Make this a 'complex' obfuscator: implement `ObfuscatorInterface` without the help of `SimpleObfuscatorTrait`?
+ * We'll need to employ two different approaches to completely deal with email addresses: we'll need one approach to
+ * deal with 'genuine' email addresses; and another to deal with already-disguised (e.g. "dan [at] powder blue com")
+ * email addresses.
  */
-class EmailAddresses extends AbstractPlugin
+class EmailAddresses extends AbstractPlugin implements ObfuscatorInterface
 {
-    /**
-     * Regular expression that will match a genuine email address in a string.
-     *
-     * @url http://www.regular-expressions.info/
-     * @var string
-     */
-    const REG_EXP = '/\b([a-zA-Z0-9\.\_\%\+\-]+)(@)([a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,4})\b/';
+    use SimpleObfuscatorTrait;
 
-    /**
-     * Returns TRUE if there is an email address in the string, or FALSE otherwise.
-     *
-     * @return bool
-     */
-    public function found()
+    public function __construct()
     {
-        /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this->getPlugin('obfuscator');
-
-        return $obfuscatorPlugin->matchAll(self::REG_EXP);
-    }
-
-    /**
-     * Obfuscates all email addresses in the string.
-     *
-     * @param string|null $replacement
-     */
-    public function obfuscate($replacement = null)
-    {
-        /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this->getPlugin('obfuscator');
-
-        $obfuscatorPlugin->obfuscateAll(self::REG_EXP, $replacement);
+        //See http://www.regular-expressions.info/
+        $this->setRegExp('/\b([a-zA-Z0-9\.\_\%\+\-]+)(@)([a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,4})\b/');
     }
 }

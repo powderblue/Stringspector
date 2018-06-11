@@ -4,7 +4,7 @@ namespace Tests\PowderBlue\Stringspector\Plugin;
 
 use PowderBlue\Stringspector\Plugin\WebsiteUrls;
 
-class WebsiteUrlsTest extends AbstractPluginTest
+class WebsiteUrlsTest extends AbstractAbstractPluginTest
 {
     /**
      * @return array
@@ -39,14 +39,14 @@ class WebsiteUrlsTest extends AbstractPluginTest
      * @dataProvider providesStringsContainingWebsiteUrls
      *
      * @param bool   $expected
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testFoundReturnsTrueIfThereIsAnWebsiteUrlInTheString($expected, $input)
+    public function testFoundReturnsTrueIfThereIsAnWebsiteUrlInTheString($expected, $string)
     {
         $websiteUrls = $this->createPlugin(
-            $this->createStringspector($input),
+            $this->createStringspector($string),
             new WebsiteUrls()
         );
 
@@ -74,13 +74,13 @@ class WebsiteUrlsTest extends AbstractPluginTest
      * @dataProvider providesObfuscatedWebsiteUrls
      *
      * @param string $expected
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testObfuscateObfuscatesAllWebsiteUrlsInTheString($expected, $input)
+    public function testObfuscateObfuscatesAllWebsiteUrlsInTheString($expected, $string)
     {
-        $stringspector = $this->createStringspector($input);
+        $stringspector = $this->createStringspector($string);
 
         $websiteUrls = $this->createPlugin($stringspector, new WebsiteUrls());
         $websiteUrls->obfuscate();

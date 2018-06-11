@@ -9,7 +9,7 @@ namespace Tests\PowderBlue\Stringspector\Plugin;
 
 use PowderBlue\Stringspector\Plugin\TelephoneNumbers;
 
-class TelephoneNumbersTest extends AbstractPluginTest
+class TelephoneNumbersTest extends AbstractAbstractPluginTest
 {
     const PHONE_NUMBERS_GITHUB_CSV_FILE = 'https://raw.githubusercontent.com/danbettles/telex/v0.0.0-alpha.0/tests/DanBettles/Telex/TelexTest/telephone_numbers.csv';
 
@@ -77,14 +77,14 @@ class TelephoneNumbersTest extends AbstractPluginTest
      * @dataProvider providesStringsContainingTelephoneNumbers
      *
      * @param bool   $expected
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testFoundReturnsTrueIfThereAppearsToBeATelephoneNumberInTheString($expected, $input)
+    public function testFoundReturnsTrueIfThereAppearsToBeATelephoneNumberInTheString($expected, $string)
     {
         $telephoneNumbers = $this->createPlugin(
-            $this->createStringspector($input),
+            $this->createStringspector($string),
             new TelephoneNumbers()
         );
 
@@ -145,13 +145,13 @@ class TelephoneNumbersTest extends AbstractPluginTest
      * @dataProvider providesTextContainingTelephoneNumbers
      *
      * @param string $expected
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testObfuscateObfuscatesAllTelephoneNumbersInTheString($expected, $input)
+    public function testObfuscateObfuscatesAllTelephoneNumbersInTheString($expected, $string)
     {
-        $stringspector = $this->createStringspector($input);
+        $stringspector = $this->createStringspector($string);
 
         $telephoneNumbers = $this->createPlugin($stringspector, new TelephoneNumbers());
         $telephoneNumbers->obfuscate();
@@ -191,14 +191,14 @@ class TelephoneNumbersTest extends AbstractPluginTest
     /**
      * @dataProvider providesTelephoneNumbersFromCsvFiles
      *
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testFoundReturnsTrueForEachLineInAFile($input)
+    public function testFoundReturnsTrueForEachLineInAFile($string)
     {
         $telephoneNumbers = $this->createPlugin(
-            $this->createStringspector($input),
+            $this->createStringspector($string),
             new TelephoneNumbers()
         );
 

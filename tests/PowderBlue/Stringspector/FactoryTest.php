@@ -13,10 +13,10 @@ use PowderBlue\Stringspector\Plugin;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateCreatesAFullyLoadedStringspector()
+    public function testCreatecontactdetailsobfuscatorCreatesAPreconfiguredStringspector()
     {
         $stringspector1 = (new Factory())
-            ->create()
+            ->createContactDetailsObfuscator()
         ;
 
         $this->assertInstanceOf(Stringspector::class, $stringspector1);
@@ -26,7 +26,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Plugin\WebsiteUrls::class, $stringspector1->websiteUrls);
 
         $stringspector2 = (new Factory())
-            ->create('Hello, World!')
+            ->createContactDetailsObfuscator('Hello, World!')
         ;
 
         $this->assertInstanceOf(Stringspector::class, $stringspector2);

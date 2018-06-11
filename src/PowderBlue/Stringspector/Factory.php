@@ -10,19 +10,21 @@ namespace PowderBlue\Stringspector;
 class Factory
 {
     /**
+     * Creates a `Stringspector` containing the email-address, telephone-number, and website-URL plugins, which can be
+     * used to obfuscate contact details in a string.
+     *
      * @return Stringspector
      *
      * @throws \ReflectionException
      */
-    public function create()
+    public function createContactDetailsObfuscator()
     {
-        $reflectionClass = new \ReflectionClass(Stringspector::class);
-
         /* @var $stringspector Stringspector */
-        $stringspector = $reflectionClass->newInstanceArgs(func_get_args());
+        $stringspector = (new \ReflectionClass(Stringspector::class))
+            ->newInstanceArgs(func_get_args())
+        ;
 
         return $stringspector
-            ->setPlugin('obfuscator', new Plugin\Obfuscator())
             ->setPlugin('emailAddresses', new Plugin\EmailAddresses())
             ->setPlugin('telephoneNumbers', new Plugin\TelephoneNumbers())
             ->setPlugin('websiteUrls', new Plugin\WebsiteUrls())

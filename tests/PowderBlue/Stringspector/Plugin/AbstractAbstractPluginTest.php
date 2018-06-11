@@ -4,14 +4,13 @@ namespace Tests\PowderBlue\Stringspector\Plugin;
 
 use PowderBlue\Stringspector\Stringspector;
 use PowderBlue\Stringspector\Plugin\AbstractPlugin;
-use PowderBlue\Stringspector\Plugin\Obfuscator;
 
-abstract class AbstractPluginTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractAbstractPluginTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @throws \ReflectionException
-     *
      * @return Stringspector
+     *
+     * @throws \ReflectionException
      */
     protected function createStringspector()
     {
@@ -20,16 +19,16 @@ abstract class AbstractPluginTest extends \PHPUnit_Framework_TestCase
         /* @var $stringspector Stringspector */
         $stringspector = $reflectionClass->newInstanceArgs(func_get_args());
 
-        return $stringspector->setPlugin('obfuscator', new Obfuscator());
+        return $stringspector;
     }
 
     /**
      * @param Stringspector  $stringspector
      * @param AbstractPlugin $plugin
      *
-     * @throws \ReflectionException
-     *
      * @return AbstractPlugin
+     *
+     * @throws \ReflectionException
      */
     protected function createPlugin(Stringspector $stringspector, AbstractPlugin $plugin)
     {

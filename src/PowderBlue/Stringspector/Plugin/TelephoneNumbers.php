@@ -10,17 +10,12 @@ namespace PowderBlue\Stringspector\Plugin;
 /**
  * Manipulates telephone numbers in a string.
  *
- * @todo Look for, and deal with, disguised telephone numbers?
- * @todo At startup, 'compile' a single regular expression for each country?  Will that improve performance?
+ * @todo Use Telex.
  */
-class TelephoneNumbers extends AbstractPlugin
+class TelephoneNumbers extends AbstractPlugin implements ObfuscatorInterface
 {
     /**
      * @var array
-     * @todo Continue grouping, and merging, patterns.
-     * @todo Try to phase out formats excluding a country code - sometimes these will pick-up parts of international
-     * numbers!
-     * @todo Use zeroes to help reduce ambiguity.
      */
     private static $countryRegExps = [
         '*' => [
@@ -60,7 +55,7 @@ class TelephoneNumbers extends AbstractPlugin
             '/\b\d{2}\s+\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                         //dd ddd dd dd dd
 
         //Excluding country code:
-            '/(?<!\+)\b\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                          //ddd dd dd dd.  @todo Review this.
+            '/(?<!\+)\b\d{3}\s+(\d{2}\s+){2}\d{2}\b/',                          //ddd dd dd dd.
             '/\b\d{2}\s+\d{3}\s+\d{2}\s+\d{2}\b/',                              //dd ddd dd dd
             '/\b\d{2}\.\d{3}\.\d{2}\.\d{2}\b/',                                 //dd.ddd.dd.dd
             '/\b(\d{3}\.){2}\d{3}\b/',                                          //ddd.ddd.ddd
@@ -94,7 +89,7 @@ class TelephoneNumbers extends AbstractPlugin
 
             //Others:
             '/\b\d{3}\s+\d{2}\s+\d{7}\b/',                                      //ddd dd ddddddd.  Ireland.
-            '/\b00\d{2}\s+(\d{3}\s+){2}\d{4}\b/',                               //00dd ddd ddd dddd.  @todo Move this up?
+            '/\b00\d{2}\s+(\d{3}\s+){2}\d{4}\b/',                               //00dd ddd ddd dddd.
             '/\b00\d{6}\s+\d{6}\b/',                                            //00dddddd dddddd
 
         //Excluding country code:
@@ -243,38 +238,61 @@ class TelephoneNumbers extends AbstractPlugin
     }
 
     /**
+     * @param array $matches
+     *
+     * @return int
+     * @todo Rename this?
+     */
+    private function matchAll(array &$matches = [])
+    {
+        $totalNumMatches = 0;
+        $fullPatternMatches = [];
+
+        foreach ($this->getRegExps() as $regExp) {
+            $currMatches = [];
+            $currNumMatches = preg_match_all($regExp, $this->getString(), $currMatches);
+
+            $totalNumMatches += $currNumMatches;
+
+            if ($currNumMatches) {
+                $fullPatternMatches = array_merge($fullPatternMatches, $currMatches[0]);
+            }
+        }
+
+        $matches = [$fullPatternMatches];
+
+        return $totalNumMatches;
+    }
+
+    /**
      * Returns TRUE if there appears to be a telephone number in the string, or FALSE otherwise.
      *
      * @return bool
      */
     public function found()
     {
-        /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this->getPlugin('obfuscator');
-
-        $regExps = $this->getRegExps();
-
-        foreach ($regExps as $regExp) {
-            if ($obfuscatorPlugin->matchAll($regExp)) {
-                return true;
-            }
-        }
-
-        return false;
+        return 0 < $this->matchAll();
     }
 
     /**
-     * @param string|null $replacement
+     * As in "obfuscate telephone numbers".
+     *
+     * @param null|string $replacement
+     * @todo Support a closure through `Stringspector::replaceString()`?
      */
     public function obfuscate($replacement = null)
     {
-        /* @var $obfuscatorPlugin Obfuscator */
-        $obfuscatorPlugin = $this->getPlugin('obfuscator');
+        $matches = [];
+        $this->matchAll($matches);
 
-        $regExps = $this->getRegExps();
+        foreach ($matches[0] as $match) {
+            $finalReplacement = $replacement;
 
-        foreach ($regExps as $regExp) {
-            $obfuscatorPlugin->obfuscateAll($regExp, $replacement);
+            if (null === $replacement) {
+                $finalReplacement = SimpleObfuscatorTrait::createObfuscatedString($match);
+            }
+
+            $this->replaceString($match, $finalReplacement);
         }
     }
 }

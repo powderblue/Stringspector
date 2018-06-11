@@ -9,7 +9,7 @@ namespace Tests\PowderBlue\Stringspector\Plugin;
 
 use PowderBlue\Stringspector\Plugin\EmailAddresses;
 
-class EmailAddressesTest extends AbstractPluginTest
+class EmailAddressesTest extends AbstractAbstractPluginTest
 {
     /**
      * @return array
@@ -38,14 +38,14 @@ class EmailAddressesTest extends AbstractPluginTest
      * @dataProvider providesStringsContainingEmailAddresses
      *
      * @param bool   $expected
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testFoundReturnsTrueIfThereIsAnEmailAddressInTheString($expected, $input)
+    public function testFoundReturnsTrueIfThereIsAnEmailAddressInTheString($expected, $string)
     {
         $emailAddresses = $this->createPlugin(
-            $this->createStringspector($input),
+            $this->createStringspector($string),
             new EmailAddresses()
         );
 
@@ -73,13 +73,13 @@ class EmailAddressesTest extends AbstractPluginTest
      * @dataProvider providesObfuscatedEmailAddresses
      *
      * @param string $expected
-     * @param string $input
+     * @param string $string
      *
      * @throws \ReflectionException
      */
-    public function testObfuscateObfuscatesAllEmailAddressesInTheString($expected, $input)
+    public function testObfuscateObfuscatesAllEmailAddressesInTheString($expected, $string)
     {
-        $stringspector = $this->createStringspector($input);
+        $stringspector = $this->createStringspector($string);
 
         $emailAddresses = $this->createPlugin($stringspector, new EmailAddresses());
         $emailAddresses->obfuscate();
