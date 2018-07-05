@@ -70,6 +70,9 @@ class TelephoneNumbersTest extends AbstractAbstractPluginTest
             [true, ' +37799992550',],
             [true, '+377 (0)98 06 36 36',],
             [true, '00377 97 97 90 00',],
+
+            [true, '0033.450.79.09.66',],
+            [true, '50.79.09.66',],
         ];
     }
 

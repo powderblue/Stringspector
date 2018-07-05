@@ -139,6 +139,8 @@ class TelephoneNumbers extends AbstractPlugin implements ObfuscatorInterface
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){3}\d\b/',                         //dd (d)d dd dd dd d
             '/\b\d{2}\s+\(\d\)\d\s+\d{2}\s+\d\s+\d{3}\s+\d{2}\b/',              //dd (d)d dd d ddd dd
             '/\b\d{2}\s+\(\d\)\d\s+(\d{2}\s+){2}-?\d\s+\d{2}\b/',               //dd (d)d dd dd d dd
+            '/\b00\d{2}\.\d{3}\.(\d{2}\.){2}\d{2}\b/',                          //00dd.ddd.dd.dd.dd
+            '/\b(\d{2}\.){3}\d{2}\b/',                                          //dd.dd.dd.ddd
         ],
         'ch' => [
         //Including country code:
