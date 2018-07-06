@@ -109,37 +109,37 @@ class TelephoneNumbersTest extends AbstractAbstractPluginTest
             'You can reach me on ************** or **************.',
             'You can reach me on (07000) 000000 or (01000) 000000.',
         ], [
-            'You can reach me on +******************.',
+            'You can reach me on *******************.',
             'You can reach me on +44 (0)0000 000 000.',
         ], [
             'You can reach me on *************.',
             'You can reach me on 00000 000 000.',
         ], [
-            '+*************.  Start.',
+            '+33 693+******.  Start.',
             '+33 693+633333.  Start.',
         ], [
-            'End.  +*************',
+            'End.  +33 693+******',
             'End.  +33 693+633333',
         ], [
-            'Call me +*************/+*************',
+            'Call me +33 693+******/**************',
             'Call me +33 693+633333/+33 789 456123',
         ], [
-            'In the +************* middle.',
+            'In the +33 693+****** middle.',
             'In the +33 693+633333 middle.',
         ], [
-            '+***************.  Start.',
+            '****************.  Start.',
             '+377 92 05 00 50.  Start.',
         ], [
-            'End.  +***************',
+            'End.  ****************',
             'End.  +377 92 05 00 50',
         ], [
-            'Call me +***************/+*****************',
+            'Call me ****************/******************',
             'Call me +377 92 05 00 50/+377 (0)98 062 121',
         ], [
-            'In the +*************** middle.',
+            'In the **************** middle.',
             'In the +377 92 05 00 50 middle.',
         ], [
-            'Instead of using this chat, please call me on +*****************.',
+            'Instead of using this chat, please call me on ******************.',
             'Instead of using this chat, please call me on +44 (0)1234 012345.',
         ],];
     }
