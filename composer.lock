@@ -1,11 +1,56 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "676496016ae0d1b9c095fb7c4065f1e0",
-    "packages": [],
+    "content-hash": "f539082c61119ba3c56ffecac3feced8",
+    "packages": [
+        {
+            "name": "danbettles/telex",
+            "version": "v0.0.0-alpha.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:danbettles/telex.git",
+                "reference": "82221b67f1c6493a48abf6b017b289e5bacb0ae3"
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5",
+                "squizlabs/php_codesniffer": "^2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DanBettles\\Telex\\": "src/DanBettles/Telex/"
+                }
+            },
+            "scripts": {
+                "app:test": [
+                    "phpunit -c tests/phpunit.xml tests"
+                ],
+                "app:lint": [
+                    "phpcs --standard=phpcs.xml --extensions=php -p --ignore=/vendor/ ."
+                ],
+                "app:check-quality": [
+                    "composer app:test",
+                    "composer app:lint"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dan Bettles",
+                    "email": "danbettles@yahoo.co.uk"
+                }
+            ],
+            "time": "2018-07-09T09:37:34+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -1463,7 +1508,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "danbettles/telex": 15
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
