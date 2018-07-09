@@ -115,16 +115,16 @@ class TelephoneNumbersTest extends AbstractAbstractPluginTest
             'You can reach me on *************.',
             'You can reach me on 00000 000 000.',
         ], [
-            '+33 693+******.  Start.',
+            '**************.  Start.',
             '+33 693+633333.  Start.',
         ], [
-            'End.  +33 693+******',
+            'End.  **************',
             'End.  +33 693+633333',
         ], [
-            'Call me +33 693+******/**************',
+            'Call me **************/**************',
             'Call me +33 693+633333/+33 789 456123',
         ], [
-            'In the +33 693+****** middle.',
+            'In the ************** middle.',
             'In the +33 693+633333 middle.',
         ], [
             '****************.  Start.',

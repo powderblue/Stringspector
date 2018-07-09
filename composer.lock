@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3301d5c96dd59c79efc45293c5b4d1d6",
+    "content-hash": "f539082c61119ba3c56ffecac3feced8",
     "packages": [
         {
             "name": "danbettles/telex",
-            "version": "dev-master",
+            "version": "v0.0.0-alpha.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:danbettles/telex.git",
-                "reference": "35f4b682aea014434ecc8013fd844b37f51f956e"
+                "reference": "82221b67f1c6493a48abf6b017b289e5bacb0ae3"
             },
             "require": {
                 "php": ">=5.4.0"
@@ -48,7 +48,7 @@
                     "email": "danbettles@yahoo.co.uk"
                 }
             ],
-            "time": "2017-02-05T11:09:22+00:00"
+            "time": "2018-07-09T09:37:34+00:00"
         }
     ],
     "packages-dev": [
@@ -1509,7 +1509,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "danbettles/telex": 20
+        "danbettles/telex": 15
     },
     "prefer-stable": false,
     "prefer-lowest": false,
