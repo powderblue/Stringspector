@@ -163,6 +163,53 @@ class TelephoneNumbersTest extends AbstractAbstractPluginTest
     }
 
     /**
+     * @return array
+     */
+    public static function providesStringsContainingDatetimes()
+    {
+        return [[
+            '23:59:59',
+        ], [
+            '18:35:00',
+        ], [
+            '09/18/2018 22:18',
+        ], [
+            '09-18-2018 22:18',
+        ], [
+            '09.18.018 22:18',
+        ], [
+            '18/09/2019',
+        ], [
+            '18-09-2019',
+        ], [
+            '18.09.2019',
+        ], [
+            '2019/09/18',
+        ], [
+            '2019-09-18',
+        ], [
+            '2019.09.18',
+        ],];
+    }
+
+    /**
+     * @dataProvider providesStringsContainingDatetimes
+     *
+     * @param string $string
+     *
+     * @throws \ReflectionException
+     */
+    public function testFoundReturnsFalseIfStringsContainDatetimes($string)
+    {
+        $telephoneNumbers = $this->createPlugin(
+            $this->createStringspector($string),
+            new TelephoneNumbers()
+        );
+
+        $this->assertFalse($telephoneNumbers->found());
+    }
+
+    /**
      * @throws \ReflectionException
      */
     public function testObfuscateAcceptsAReplacementString()
